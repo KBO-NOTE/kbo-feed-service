@@ -75,4 +75,9 @@ public class Content {
         long current = likeCount == null ? 0L : likeCount;
         likeCount = Math.max(0L, current - 1L);
     }
+
+    public void increaseCommentCount() {
+        long current = commentCount == null ? 0L : commentCount;
+        commentCount = current + 1L;
+    }
 }

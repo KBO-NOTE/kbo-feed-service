@@ -44,4 +44,15 @@ public class ContentComment {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public static ContentComment create(Content content, User user, String comment) {
+        ContentComment contentComment = new ContentComment();
+        contentComment.content = content;
+        contentComment.user = user;
+        contentComment.comment = comment;
+        contentComment.status = "ACTIVE";
+        contentComment.createdAt = LocalDateTime.now();
+        contentComment.updatedAt = null;
+        return contentComment;
+    }
 }
