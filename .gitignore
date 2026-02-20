@@ -1,0 +1,60 @@
+﻿# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+*.class
+*.kotlin_module
+
+# Logs
+*.log
+logs/
+
+# Runtime / PID
+*.pid
+*.seed
+*.pid.lock
+
+# Environment & secrets
+.env
+.env.*
+*.env
+*.local
+*.secret
+secrets/
+
+# Spring Boot
+application-*.properties
+application-*.yml
+application-*.yaml
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (in case frontend is added later)
+node_modules/
+
+# Archives
+*.zip
+*.tar
+*.gz
+*.7z
+
+# Test output
+coverage/
+*.lcov
+
+# Temp
+tmp/
+temp/
+*.tmp
