@@ -9,7 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "content")
 public class Content {
@@ -57,63 +62,4 @@ public class Content {
 
     @Column(name = "comment_count", nullable = false)
     private Long commentCount;
-
-    protected Content() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public PlatformType getPlatform() {
-        return platform;
-    }
-
-    public String getPress() {
-        return press;
-    }
-
-    public String getArticleUrlNaver() {
-        return articleUrlNaver;
-    }
-
-    public String getArticleUrlOrigin() {
-        return articleUrlOrigin;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public LocalDateTime getPublishedAt() {
-        return publishedAt;
-    }
-
-    public LocalDateTime getCrawledAt() {
-        return crawledAt;
-    }
-
-    public boolean isHasVideo() {
-        return hasVideo;
-    }
-
-    public String getRepresentativeImgUrl() {
-        return representativeImgUrl;
-    }
-
-    public Long getLikeCount() {
-        return likeCount;
-    }
-
-    public Long getCommentCount() {
-        return commentCount;
-    }
 }

@@ -13,7 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "content_like")
 public class ContentLike {
@@ -36,27 +41,4 @@ public class ContentLike {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    protected ContentLike() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Content getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public ContentLikeStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 }

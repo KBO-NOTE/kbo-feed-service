@@ -11,7 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "content_comment")
 public class ContentComment {
@@ -39,35 +44,4 @@ public class ContentComment {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    protected ContentComment() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Content getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 }

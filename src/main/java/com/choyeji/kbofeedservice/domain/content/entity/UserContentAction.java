@@ -13,7 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user_content_action")
 public class UserContentAction {
@@ -40,31 +45,4 @@ public class UserContentAction {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    protected UserContentAction() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Content getContent() {
-        return content;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public PlatformType getPlatform() {
-        return platform;
-    }
-
-    public ActionType getActionType() {
-        return actionType;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 }
