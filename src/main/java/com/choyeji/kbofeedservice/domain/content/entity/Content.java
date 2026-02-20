@@ -54,7 +54,7 @@ public class Content {
     @Column(name = "has_video", nullable = false)
     private boolean hasVideo;
 
-    @Column(name = "representative_img_url", columnDefinition = "TEXT")
+    @Column(name = "representative_image_url", columnDefinition = "TEXT")
     private String representativeImgUrl;
 
     @Column(name = "image_count", nullable = false)
@@ -65,4 +65,14 @@ public class Content {
 
     @Column(name = "comment_count", nullable = false)
     private Long commentCount;
+
+    public void increaseLikeCount() {
+        long current = likeCount == null ? 0L : likeCount;
+        likeCount = current + 1L;
+    }
+
+    public void decreaseLikeCount() {
+        long current = likeCount == null ? 0L : likeCount;
+        likeCount = Math.max(0L, current - 1L);
+    }
 }

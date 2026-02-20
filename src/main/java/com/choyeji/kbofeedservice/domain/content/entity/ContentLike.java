@@ -41,4 +41,25 @@ public class ContentLike {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public static ContentLike create(Content content, User user) {
+        ContentLike contentLike = new ContentLike();
+        contentLike.content = content;
+        contentLike.user = user;
+        contentLike.status = ContentLikeStatus.LIKE;
+        contentLike.createdAt = LocalDateTime.now();
+        return contentLike;
+    }
+
+    public boolean isLiked() {
+        return status == ContentLikeStatus.LIKE;
+    }
+
+    public void markLiked() {
+        this.status = ContentLikeStatus.LIKE;
+    }
+
+    public void markCanceled() {
+        this.status = ContentLikeStatus.CANCEL;
+    }
 }
