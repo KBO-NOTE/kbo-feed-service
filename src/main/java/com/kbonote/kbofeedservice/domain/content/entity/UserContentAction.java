@@ -45,4 +45,14 @@ public class UserContentAction {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public static UserContentAction create(Content content, User user, ActionType actionType) {
+        UserContentAction action = new UserContentAction();
+        action.content = content;
+        action.user = user;
+        action.platform = content.getPlatform();
+        action.actionType = actionType;
+        action.createdAt = LocalDateTime.now();
+        return action;
+    }
 }
