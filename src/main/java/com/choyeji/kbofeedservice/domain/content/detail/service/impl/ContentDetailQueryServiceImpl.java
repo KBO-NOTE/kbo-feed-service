@@ -8,6 +8,7 @@ import com.choyeji.kbofeedservice.domain.content.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,16 +25,19 @@ public class ContentDetailQueryServiceImpl implements ContentDetailQueryService 
         return new ContentDetailResponse(
                 content.getId(),
                 content.getTitle(),
-                content.getArticleUrlOrigin(),
+                resolveArticleUrlOrigin(content),
                 content.getRepresentativeImgUrl(),
-                toInt(content.getImageCount()),
+                content.getImageCount(),
                 content.getLikeCount(),
                 content.getCommentCount(),
                 content.getPublishedAt()
         );
     }
 
-    private int toInt(Long value) {
-        return value == null ? 0 : Math.toIntExact(value);
+    private String resolveArticleUrlOrigin(Content content) {
+        if (!StringUtils.hasText(content.getArticleUrlOrigin())) {
+            return "";
+        }
+        return content.getArticleUrlOrigin();
     }
 }

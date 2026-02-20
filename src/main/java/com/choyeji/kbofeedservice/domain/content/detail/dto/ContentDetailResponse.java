@@ -8,7 +8,7 @@ public record ContentDetailResponse(
         String title,
         @JsonProperty("article_url_origin") String articleUrlOrigin,
         @JsonProperty("representative_image_url") String representativeImageUrl,
-        @JsonProperty("image_count") int imageCount,
+        @JsonProperty("image_count") Long imageCount,
         @JsonProperty("like_count") Long likeCount,
         @JsonProperty("comment_count") Long commentCount,
         @JsonProperty("published_at") LocalDateTime publishedAt
