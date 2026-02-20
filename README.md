@@ -70,11 +70,43 @@ Windows:
 - `GET /api/players/{player_id}/feeds`: 선수 관련 피드 조회(개인화/비개인화 + 커서 페이징)
 - `GET /api/v1/feeds/health`: 서비스 헬스 체크
 
-## 개인화 피드 동작 요약
-- 기본 정렬: `like_count DESC, published_at DESC, content_id DESC`
-- 개인화 정렬: `score DESC` 우선, 동점 시 기본 정렬 기준으로 tie-break
-- 대상 데이터: 최근 1개월 이내 발행 콘텐츠
-- 분기 조건: 사용자 행동 점수 기반(`user_content_action`)
+## 개인화 알고리즘 적용 방식
+선수 피드 API(`GET /api/players/{player_id}/feeds`)에서 아래 규칙으로 개인화를 적용합니다.
+
+### 1) 개인화 적용 여부 분기
+- 기준: `user_content_action` 기반 사용자 행동 점수
+- 계산 로직:
+  - 기본 행동(VIEW, LIKE, COMMENT): `+1`
+  - 취소/삭제 행동(LIKE_CANCLE, COMMENT_DELETE): `-1`
+- 개인화 적용 조건: 누적 점수 `>= 5`
+- 점수 `< 5`면 비개인화 정렬 사용
+
+### 2) 후보 콘텐츠 범위
+- `player_content_map`으로 선수와 매핑된 콘텐츠만 조회
+- 발행일 `published_at` 기준 최근 1개월 이내 콘텐츠만 조회
+
+### 3) 개인화 점수 계산(콘텐츠별)
+개인화 모드일 때, 해당 사용자(`X-User-ID`)의 `user_content_action` 로그를 콘텐츠별로 집계해 점수를 계산합니다.
+
+- VIEW: `+1`
+- LIKE: `+3`
+- LIKE_CANCLE: `-3`
+- COMMENT: `+2`
+- COMMENT_DELETE: `-2`
+
+### 4) 정렬 규칙
+- 개인화 정렬:
+  - `score DESC`
+  - 동점 시 `like_count DESC`
+  - 동점 시 `published_at DESC`
+  - 동점 시 `content_id DESC`
+- 비개인화 정렬:
+  - `like_count DESC, published_at DESC, content_id DESC`
+
+### 5) 커서 페이징
+- 무한 스크롤용 커서(Base64) 내부 값:
+  - `score`, `like_count`, `published_at`, `content_id`
+- 커서는 서버가 생성/해석하는 opaque 값으로 사용
 
 ## 액션 로그(user_content_action)
 다음 행동 시 로그를 저장합니다.
