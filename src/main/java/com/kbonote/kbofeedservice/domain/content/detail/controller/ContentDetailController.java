@@ -26,6 +26,6 @@ public class ContentDetailController {
             @RequestHeader("X-User-ID") Long userId,
             @RequestHeader("X-User-Role") String userRole
     ) {
-        return contentDetailQueryService.getContentDetail(contentId);
+        return contentDetailQueryService.getContentDetail(contentId, userId);
     }
 }

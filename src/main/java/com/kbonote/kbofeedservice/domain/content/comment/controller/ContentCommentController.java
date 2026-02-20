@@ -1,10 +1,9 @@
 package com.kbonote.kbofeedservice.domain.content.comment.controller;
 
-import com.kbonote.kbofeedservice.common.exception.UnauthorizedException;
 import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentCreateRequest;
 import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentCreateResponse;
-import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentListResponse;
 import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentListQuery;
+import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentListResponse;
 import com.kbonote.kbofeedservice.domain.content.comment.service.ContentCommentCommandService;
 import com.kbonote.kbofeedservice.domain.content.comment.service.ContentCommentQueryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,18 +45,11 @@ public class ContentCommentController {
     @PostMapping("/{content_id}/comment")
     public ResponseEntity<CommentCreateResponse> createComment(
             @PathVariable("content_id") Long contentId,
-            @RequestHeader(value = "X-User-ID", required = false) Long userId,
-            @RequestHeader(value = "X-User-Role", required = false) String userRole,
+            @RequestHeader("X-User-ID") Long userId,
+            @RequestHeader("X-User-Role") String userRole,
             @Valid @RequestBody CommentCreateRequest request
     ) {
-        validateAuthHeaders(userId, userRole);
         CommentCreateResponse response = contentCommentCommandService.createComment(contentId, userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    private void validateAuthHeaders(Long userId, String userRole) {
-        if (userId == null || !StringUtils.hasText(userRole)) {
-            throw new UnauthorizedException("로그인이 필요합니다.");
-        }
     }
 }

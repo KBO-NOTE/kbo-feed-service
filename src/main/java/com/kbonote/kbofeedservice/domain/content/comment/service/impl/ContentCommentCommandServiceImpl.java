@@ -1,10 +1,12 @@
 package com.kbonote.kbofeedservice.domain.content.comment.service.impl;
 
 import com.kbonote.kbofeedservice.common.exception.UnauthorizedException;
+import com.kbonote.kbofeedservice.domain.content.action.service.UserContentActionLogService;
 import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentCreateRequest;
 import com.kbonote.kbofeedservice.domain.content.comment.dto.CommentCreateResponse;
 import com.kbonote.kbofeedservice.domain.content.comment.exception.InvalidContentException;
 import com.kbonote.kbofeedservice.domain.content.comment.service.ContentCommentCommandService;
+import com.kbonote.kbofeedservice.domain.content.entity.ActionType;
 import com.kbonote.kbofeedservice.domain.content.entity.Content;
 import com.kbonote.kbofeedservice.domain.content.entity.ContentComment;
 import com.kbonote.kbofeedservice.domain.content.like.exception.ArticleNotFoundException;
@@ -24,6 +26,7 @@ public class ContentCommentCommandServiceImpl implements ContentCommentCommandSe
     private final ContentRepository contentRepository;
     private final ContentCommentRepository contentCommentRepository;
     private final UserRepository userRepository;
+    private final UserContentActionLogService userContentActionLogService;
 
     @Override
     @Transactional
@@ -37,6 +40,7 @@ public class ContentCommentCommandServiceImpl implements ContentCommentCommandSe
 
         ContentComment saved = contentCommentRepository.save(ContentComment.create(content, user, normalizedComment));
         content.increaseCommentCount();
+        userContentActionLogService.log(content, userId, ActionType.COMMENT);
 
         return new CommentCreateResponse(saved.getId());
     }

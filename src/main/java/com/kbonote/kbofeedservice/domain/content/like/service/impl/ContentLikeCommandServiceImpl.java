@@ -1,6 +1,8 @@
 package com.kbonote.kbofeedservice.domain.content.like.service.impl;
 
 import com.kbonote.kbofeedservice.common.exception.UnauthorizedException;
+import com.kbonote.kbofeedservice.domain.content.action.service.UserContentActionLogService;
+import com.kbonote.kbofeedservice.domain.content.entity.ActionType;
 import com.kbonote.kbofeedservice.domain.content.entity.Content;
 import com.kbonote.kbofeedservice.domain.content.entity.ContentLike;
 import com.kbonote.kbofeedservice.domain.content.like.dto.ContentLikeToggleResponse;
@@ -21,6 +23,7 @@ public class ContentLikeCommandServiceImpl implements ContentLikeCommandService 
     private final ContentRepository contentRepository;
     private final ContentLikeRepository contentLikeRepository;
     private final UserRepository userRepository;
+    private final UserContentActionLogService userContentActionLogService;
 
     @Override
     @Transactional
@@ -30,9 +33,16 @@ public class ContentLikeCommandServiceImpl implements ContentLikeCommandService 
         Content content = contentRepository.findByIdForUpdate(contentId)
                 .orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
 
-        return contentLikeRepository.findByContentIdAndUserId(contentId, userId)
+        ContentLikeToggleResponse response = contentLikeRepository.findByContentIdAndUserId(contentId, userId)
                 .map(existingLike -> toggleExistingLike(content, existingLike))
                 .orElseGet(() -> createLike(content, userId));
+
+        userContentActionLogService.log(
+                content,
+                userId,
+                response.liked() ? ActionType.LIKE : ActionType.LIKE_CANCLE
+        );
+        return response;
     }
 
     private ContentLikeToggleResponse createLike(Content content, Long userId) {

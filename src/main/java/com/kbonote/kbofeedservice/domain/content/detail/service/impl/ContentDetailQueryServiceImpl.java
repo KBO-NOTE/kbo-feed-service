@@ -1,8 +1,10 @@
 package com.kbonote.kbofeedservice.domain.content.detail.service.impl;
 
 import com.kbonote.kbofeedservice.common.exception.ResourceNotFoundException;
+import com.kbonote.kbofeedservice.domain.content.action.service.UserContentActionLogService;
 import com.kbonote.kbofeedservice.domain.content.detail.dto.ContentDetailResponse;
 import com.kbonote.kbofeedservice.domain.content.detail.service.ContentDetailQueryService;
+import com.kbonote.kbofeedservice.domain.content.entity.ActionType;
 import com.kbonote.kbofeedservice.domain.content.entity.Content;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,14 @@ import org.springframework.util.StringUtils;
 public class ContentDetailQueryServiceImpl implements ContentDetailQueryService {
 
     private final ContentRepository contentRepository;
+    private final UserContentActionLogService userContentActionLogService;
 
     @Override
-    public ContentDetailResponse getContentDetail(Long contentId) {
+    public ContentDetailResponse getContentDetail(Long contentId, Long userId) {
         Content content = contentRepository.findById(contentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
+
+        userContentActionLogService.log(content, userId, ActionType.VIEW);
 
         return new ContentDetailResponse(
                 content.getId(),
