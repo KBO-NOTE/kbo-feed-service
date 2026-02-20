@@ -57,6 +57,9 @@ public class Content {
     @Column(name = "representative_img_url", columnDefinition = "TEXT")
     private String representativeImgUrl;
 
+    @Column(name = "image_count", nullable = false)
+    private Long imageCount;
+
     @Column(name = "like_count", nullable = false)
     private Long likeCount;
 
