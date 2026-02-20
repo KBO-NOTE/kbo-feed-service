@@ -29,8 +29,6 @@ public class PlayerFeedQueryRepository {
                         WHEN 'LIKE_CANCLE' THEN -3
                         WHEN 'COMMENT' THEN 2
                         WHEN 'COMMENT_DELETE' THEN -2
-                        WHEN 'CLICK' THEN 3
-                        WHEN 'SHARE' THEN 2
                         WHEN 'VIEW' THEN 1
                         ELSE 0
                     END

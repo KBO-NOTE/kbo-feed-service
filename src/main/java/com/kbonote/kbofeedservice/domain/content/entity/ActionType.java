@@ -5,7 +5,5 @@ public enum ActionType {
     LIKE,
     LIKE_CANCLE,
     COMMENT,
-    COMMENT_DELETE,
-    CLICK,
-    SHARE
+    COMMENT_DELETE
 }
