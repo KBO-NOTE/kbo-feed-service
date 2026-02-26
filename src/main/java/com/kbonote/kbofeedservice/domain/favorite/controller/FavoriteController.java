@@ -43,6 +43,6 @@ public class FavoriteController {
     @GetMapping
     public FavoritePlayersResponse getFavoritePlayerIds(@RequestHeader("X-User-ID") Long userId) {
         List<Long> playerIds = favoriteService.getFavoritePlayerIds(userId);
-        return new FavoritePlayersResponse(playerIds, playerIds.size());
+        return new FavoritePlayersResponse(playerIds);
     }
 }
