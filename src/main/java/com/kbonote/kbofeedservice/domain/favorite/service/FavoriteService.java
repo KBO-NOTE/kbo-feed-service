@@ -3,6 +3,8 @@ package com.kbonote.kbofeedservice.domain.favorite.service;
 import com.kbonote.kbofeedservice.domain.favorite.entity.UserFavoritePlayer;
 import com.kbonote.kbofeedservice.domain.favorite.entity.UserFavoritePlayerId;
 import com.kbonote.kbofeedservice.domain.favorite.repository.FavoriteRepository;
+import com.kbonote.kbofeedservice.domain.player.repository.PlayerRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +17,16 @@ import java.util.List;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
+    private final PlayerRepository playerRepository;
     // PlayerRepository, UserRepository 주입 필요 (존재 확인용)
 
     @Transactional
     public void followPlayer(Long userId, Long playerId) {
         UserFavoritePlayerId id = new UserFavoritePlayerId(playerId, userId);
 
-        //TODO : playerId가 혹시라도 존재하지 않는 플레이어면 exception
+        if(!playerRepository.existsById(playerId)){
+            throw new EntityNotFoundException("존재하지 않는 선수입니다.");
+        }
 
         // 이미 존재하면 예외 처리 (데이터 정합성)
         if (favoriteRepository.existsById(id)) {
