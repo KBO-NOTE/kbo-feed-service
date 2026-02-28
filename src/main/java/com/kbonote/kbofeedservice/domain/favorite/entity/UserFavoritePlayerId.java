@@ -1,4 +1,4 @@
-package com.kbonote.kbofeedservice.domain.player.entity;
+package com.kbonote.kbofeedservice.domain.favorite.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
