@@ -1,8 +1,11 @@
 package com.kbonote.kbofeedservice.domain.favorite.controller;
 
+import com.kbonote.kbofeedservice.common.auth.CurrentUser;
+import com.kbonote.kbofeedservice.common.auth.CurrentUserParam;
 import com.kbonote.kbofeedservice.domain.favorite.dto.FavoritePlayersResponse;
 import com.kbonote.kbofeedservice.domain.favorite.service.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,9 +26,10 @@ public class FavoriteController {
     @ResponseStatus(HttpStatus.CREATED)
     public void followPlayer(
             @PathVariable("playerId") Long playerId,
-            @RequestHeader("X-User-ID") Long userId
+            @Parameter(hidden = true)
+            @CurrentUserParam CurrentUser currentUser
     ) {
-        favoriteService.followPlayer(userId, playerId);
+        favoriteService.followPlayer(currentUser.userId(), playerId);
     }
 
     @Operation(summary = "선수 팔로우 해제", description = "관심 등록된 선수를 해제합니다.")
@@ -33,16 +37,20 @@ public class FavoriteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unfollowPlayer(
             @PathVariable("playerId") Long playerId,
-            @RequestHeader("X-User-ID") Long userId
+            @Parameter(hidden = true)
+            @CurrentUserParam CurrentUser currentUser
     ) {
-        favoriteService.unfollowPlayer(userId, playerId);
+        favoriteService.unfollowPlayer(currentUser.userId(), playerId);
     }
 
 
     @Operation(summary = "팔로우 선수 ID 목록 조회", description = "내가 팔로우한 모든 선수의 ID 목록을 반환합니다.")
     @GetMapping
-    public FavoritePlayersResponse getFavoritePlayerIds(@RequestHeader("X-User-ID") Long userId) {
-        List<Long> playerIds = favoriteService.getFavoritePlayerIds(userId);
+    public FavoritePlayersResponse getFavoritePlayerIds(
+            @Parameter(hidden = true)
+            @CurrentUserParam CurrentUser currentUser
+    ) {
+        List<Long> playerIds = favoriteService.getFavoritePlayerIds(currentUser.userId());
         return new FavoritePlayersResponse(playerIds);
     }
 }
