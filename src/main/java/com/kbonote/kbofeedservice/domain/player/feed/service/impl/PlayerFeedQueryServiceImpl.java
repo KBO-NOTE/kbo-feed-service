@@ -60,8 +60,7 @@ public class PlayerFeedQueryServiceImpl implements PlayerFeedQueryService {
                         row.liked(),
                         row.likeCount(),
                         row.commentCount(),
-                        row.publishedAt(),
-                        row.score()
+                        row.publishedAt()
                 ))
                 .toList();
 

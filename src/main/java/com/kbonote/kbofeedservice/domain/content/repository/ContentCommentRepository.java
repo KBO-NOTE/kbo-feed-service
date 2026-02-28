@@ -13,7 +13,7 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, cc.comment, cc.createdAt
+                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
             )
             from ContentComment cc
             join cc.user u
@@ -24,7 +24,7 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, cc.comment, cc.createdAt
+                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
             )
             from ContentComment cc
             join cc.user u
@@ -44,7 +44,7 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, cc.comment, cc.createdAt
+                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
             )
             from ContentComment cc
             join cc.user u
@@ -55,7 +55,7 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, cc.comment, cc.createdAt
+                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
             )
             from ContentComment cc
             join cc.user u

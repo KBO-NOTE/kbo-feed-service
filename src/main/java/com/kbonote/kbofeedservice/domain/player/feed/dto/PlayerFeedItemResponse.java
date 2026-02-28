@@ -11,7 +11,6 @@ public record PlayerFeedItemResponse(
         boolean liked,
         @JsonProperty("like_count") Long likeCount,
         @JsonProperty("comment_count") Long commentCount,
-        @JsonProperty("published_at") LocalDateTime publishedAt,
-        Long score
+        @JsonProperty("published_at") LocalDateTime publishedAt
 ) {
 }

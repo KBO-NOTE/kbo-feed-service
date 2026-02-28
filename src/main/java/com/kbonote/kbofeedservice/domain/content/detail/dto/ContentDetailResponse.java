@@ -7,6 +7,7 @@ public record ContentDetailResponse(
         Long id,
         String title,
         @JsonProperty("url") String url,
+        boolean liked,
         @JsonProperty("representative_image_url") String representativeImageUrl,
         @JsonProperty("image_count") Long imageCount,
         @JsonProperty("like_count") Long likeCount,

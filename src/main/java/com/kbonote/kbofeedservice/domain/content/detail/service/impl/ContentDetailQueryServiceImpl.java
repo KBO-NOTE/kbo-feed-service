@@ -6,6 +6,7 @@ import com.kbonote.kbofeedservice.domain.content.detail.dto.ContentDetailRespons
 import com.kbonote.kbofeedservice.domain.content.detail.service.ContentDetailQueryService;
 import com.kbonote.kbofeedservice.domain.content.entity.ActionType;
 import com.kbonote.kbofeedservice.domain.content.entity.Content;
+import com.kbonote.kbofeedservice.domain.content.repository.ContentLikeRepository;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 public class ContentDetailQueryServiceImpl implements ContentDetailQueryService {
 
     private final ContentRepository contentRepository;
+    private final ContentLikeRepository contentLikeRepository;
     private final UserContentActionLogService userContentActionLogService;
 
     @Override
@@ -31,6 +33,7 @@ public class ContentDetailQueryServiceImpl implements ContentDetailQueryService 
                 content.getId(),
                 content.getTitle(),
                 resolveUrl(content),
+                isLiked(contentId, userId),
                 content.getRepresentativeImgUrl(),
                 content.getImageCount(),
                 content.getLikeCount(),
@@ -44,5 +47,11 @@ public class ContentDetailQueryServiceImpl implements ContentDetailQueryService 
             return "";
         }
         return content.getUrl();
+    }
+
+    private boolean isLiked(Long contentId, Long userId) {
+        return contentLikeRepository.findByContentIdAndUserId(contentId, userId)
+                .map(contentLike -> contentLike.isLiked())
+                .orElse(false);
     }
 }
