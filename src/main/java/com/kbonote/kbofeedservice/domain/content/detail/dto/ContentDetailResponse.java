@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public record ContentDetailResponse(
         Long id,
         String title,
-        @JsonProperty("article_url_origin") String articleUrlOrigin,
+        @JsonProperty("url") String url,
         @JsonProperty("representative_image_url") String representativeImageUrl,
         @JsonProperty("image_count") Long imageCount,
         @JsonProperty("like_count") Long likeCount,

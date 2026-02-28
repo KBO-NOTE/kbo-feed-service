@@ -30,7 +30,7 @@ public class ContentDetailQueryServiceImpl implements ContentDetailQueryService 
         return new ContentDetailResponse(
                 content.getId(),
                 content.getTitle(),
-                resolveArticleUrlOrigin(content),
+                resolveUrl(content),
                 content.getRepresentativeImgUrl(),
                 content.getImageCount(),
                 content.getLikeCount(),
@@ -39,10 +39,10 @@ public class ContentDetailQueryServiceImpl implements ContentDetailQueryService 
         );
     }
 
-    private String resolveArticleUrlOrigin(Content content) {
-        if (!StringUtils.hasText(content.getArticleUrlOrigin())) {
+    private String resolveUrl(Content content) {
+        if (!StringUtils.hasText(content.getUrl())) {
             return "";
         }
-        return content.getArticleUrlOrigin();
+        return content.getUrl();
     }
 }
