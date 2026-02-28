@@ -24,26 +24,23 @@ public class Content {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 20)
     private PlatformType platform;
 
     @Column(nullable = false, length = 100)
     private String press;
 
-    @Column(name = "article_url_naver", nullable = false)
-    private String articleUrlNaver;
+    @Column(name = "url", length = 500)
+    private String url;
 
-    @Column(name = "article_url_origin")
-    private String articleUrlOrigin;
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String body;
 
-    @Column(nullable = false)
-    private String author;
+    @Column(name = "creator", nullable = false, length = 100)
+    private String creator;
 
     @Column(name = "published_at", nullable = false)
     private LocalDateTime publishedAt;

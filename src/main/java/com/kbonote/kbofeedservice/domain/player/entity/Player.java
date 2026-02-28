@@ -49,9 +49,6 @@ public class Player {
     @Column(name = "retire_date")
     private LocalDate retireDate;
 
-    @Column(name = "hitter_stat_link")
-    private String hitterStatLink;
-
-    @Column(name = "pitcher_stat_link")
-    private String pitcherStatLink;
+    @Column(name = "link", length = 255)
+    private String link;
 }
