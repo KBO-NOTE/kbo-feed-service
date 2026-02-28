@@ -42,7 +42,7 @@ public class ContentCommentController {
     }
 
     @Operation(summary = "Create comment on content")
-    @PostMapping("/{content_id}/comment")
+    @PostMapping("/{content_id}/comments")
     public ResponseEntity<CommentCreateResponse> createComment(
             @PathVariable("content_id") Long contentId,
             @RequestHeader("X-User-ID") Long userId,

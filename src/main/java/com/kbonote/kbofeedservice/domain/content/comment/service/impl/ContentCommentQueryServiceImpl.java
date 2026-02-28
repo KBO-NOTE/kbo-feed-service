@@ -57,6 +57,7 @@ public class ContentCommentQueryServiceImpl implements ContentCommentQueryServic
                         row.id(),
                         row.userId(),
                         row.nickname(),
+                        row.profileImageUrl(),
                         row.content(),
                         row.createdAt()
                 ))

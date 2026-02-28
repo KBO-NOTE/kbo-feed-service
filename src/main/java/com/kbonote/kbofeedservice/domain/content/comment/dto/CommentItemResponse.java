@@ -7,6 +7,7 @@ public record CommentItemResponse(
         Long id,
         @JsonProperty("user_id") Long userId,
         String nickname,
+        @JsonProperty("profile_image_url") String profileImageUrl,
         String content,
         @JsonProperty("created_at") LocalDateTime createdAt
 ) {
