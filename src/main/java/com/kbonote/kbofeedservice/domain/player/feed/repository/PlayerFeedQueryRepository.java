@@ -4,7 +4,9 @@ import com.kbonote.kbofeedservice.domain.player.feed.dto.PlayerFeedCursor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -169,9 +171,25 @@ public class PlayerFeedQueryRepository {
     }
 
     private LocalDateTime toLocalDateTime(Object value) {
+        if (value == null) {
+            return null;
+        }
+        // 1. Timestamp 타입 처리 (기존 로직 유지)
         if (value instanceof Timestamp timestamp) {
             return timestamp.toLocalDateTime();
         }
+
+        // 2. Instant 타입 처리 (에러 발생 원인 해결)
+        if (value instanceof Instant instant) {
+            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        }
+
+        // 3. 이미 LocalDateTime일 경우를 대비한 안전 장치
+        if (value instanceof LocalDateTime ldt) {
+            return ldt;
+        }
+
+        // 그 외의 경우 마지막 시도로 캐스팅 (여전히 실패하면 로그 확인용)
         return (LocalDateTime) value;
     }
 }
