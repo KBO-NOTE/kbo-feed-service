@@ -41,5 +41,8 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             cd ~/kbo-note/kbo-feed-service/deploy
             ./deploy.sh ${{ github.sha }}
+            
+            docker logout ghcr.io
