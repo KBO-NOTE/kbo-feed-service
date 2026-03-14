@@ -25,11 +25,13 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ghcr.io/kbo-note/kbo-note-feed-service:latest .
+            docker build -t ghcr.io/kbo-note/kbo-note-feed-service:latest \
+                        -t ghcr.io/kbo-note/kbo-note-feed-service:${{ github.sha }} .
 
       - name: Push Docker Image
         run: |
-          docker push ghcr.io/kbo-note/kbo-note-feed-service:latest
+            docker push ghcr.io/kbo-note/kbo-note-feed-service:latest
+            docker push ghcr.io/kbo-note/kbo-note-feed-service:${{ github.sha }}
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1
