@@ -118,3 +118,28 @@ Windows:
 - 메인 기능은 계속 동작
 - 에러 로그 출력: `USER_CONTENT_ACTION_LOG_WRITE_FAILED`
 - 메트릭 증가: `user_content_action.log.failure`
+
+## Blue-Green 배포
+현재 배포 파이프라인은 무중단 배포를 위해 Blue-Green 전략을 사용합니다.
+
+### 배포 흐름
+1. GitHub Actions(`.github/workflows/deploy.yml`)가 이미지를 빌드하고 GHCR에 아래 태그로 푸시합니다.
+   - `ghcr.io/kbo-note/kbo-note-feed-service:${GITHUB_SHA}`
+   - `ghcr.io/kbo-note/kbo-note-feed-service:latest`
+2. 배포 서버에서 `~/kbo-note/kbo-feed-service/deploy/deploy.sh ${{ github.sha }}`를 실행합니다.
+3. `deploy.sh`는 현재 실행 컨테이너(`feed-blue`/`feed-green`)를 확인하고 반대 슬롯을 배포 대상으로 선택합니다.
+4. 선택된 슬롯 포트(`8081` 또는 `8082`)로 신규 컨테이너를 `--network host`로 실행합니다.
+5. `GET /api/v1/feeds/health` 헬스체크를 최대 10회(3초 간격) 수행합니다.
+6. 헬스체크 성공 시 NGINX 업스트림 포트를 교체하고(`sed`), `nginx -t` 후 reload 합니다.
+7. 트래픽 전환이 끝나면 이전 슬롯 컨테이너를 중지/삭제합니다.
+
+### 롤백
+- 신규 슬롯 헬스체크 실패 시 트래픽 전환 없이 배포를 중단하고 신규 컨테이너를 제거합니다.
+- 이 경우 기존 슬롯 컨테이너는 그대로 유지됩니다.
+
+### 수동 재실행
+- 코드 변경 없이도 GitHub Actions의 `Run workflow` 버튼(`workflow_dispatch`)으로 배포를 다시 실행할 수 있습니다.
+
+### 운영 참고
+- 배포 로그는 `deploy.log`에 `날짜 + 이미지 태그` 형태로 기록됩니다.
+- `deploy.sh`를 수동 실행할 때 태그를 생략하면 기본값은 `latest`입니다.
