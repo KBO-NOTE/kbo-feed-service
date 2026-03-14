@@ -6,7 +6,9 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.servers.Server;
 import java.util.ArrayList;
+import java.util.List;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
+                .servers(List.of(new Server().url("/").description("Current host")))
                 .info(new Info()
                         .title("KBO Feed Service API")
                         .description("KBO feed service REST API documentation")
