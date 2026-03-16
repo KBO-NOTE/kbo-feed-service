@@ -26,6 +26,7 @@ SERVER_PORT=8080
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=kbo_feed_service
+DB_SCHEMA=kbonote
 DB_USERNAME=your_db_user
 DB_PASSWORD=your_db_password
 ```
