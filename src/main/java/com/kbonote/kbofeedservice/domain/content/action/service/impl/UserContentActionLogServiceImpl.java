@@ -43,8 +43,19 @@ public class UserContentActionLogServiceImpl implements UserContentActionLogServ
         } catch (Exception ex) {
             // Action log failure should not break main user flow.
             actionLogFailureCounter.increment();
-            log.error("USER_CONTENT_ACTION_LOG_WRITE_FAILED userId={}, contentId={}, actionType={}",
-                    userId, content.getId(), actionType, ex);
+            Throwable rootCause = ex;
+            while (rootCause.getCause() != null) {
+                rootCause = rootCause.getCause();
+            }
+            log.error(
+                    "USER_CONTENT_ACTION_LOG_WRITE_FAILED userId={}, contentId={}, actionType={}, errorType={}, errorMessage={}",
+                    userId,
+                    content.getId(),
+                    actionType,
+                    rootCause.getClass().getSimpleName(),
+                    rootCause.getMessage(),
+                    ex
+            );
         }
     }
 }
