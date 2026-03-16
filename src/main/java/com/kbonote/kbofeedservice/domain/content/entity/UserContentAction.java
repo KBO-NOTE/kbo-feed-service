@@ -2,6 +2,7 @@ package com.kbonote.kbofeedservice.domain.content.entity;
 
 import com.kbonote.kbofeedservice.domain.user.entity.User;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,7 +36,7 @@ public class UserContentAction {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PlatformTypeConverter.class)
     @Column(nullable = false, length = 30)
     private PlatformType platform;
 
