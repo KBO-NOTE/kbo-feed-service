@@ -1,6 +1,5 @@
 package com.kbonote.kbofeedservice.domain.content.entity;
 
-import com.kbonote.kbofeedservice.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -32,9 +31,8 @@ public class UserContentAction {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Convert(converter = PlatformTypeConverter.class)
     @Column(nullable = false, length = 30)
@@ -47,10 +45,10 @@ public class UserContentAction {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public static UserContentAction create(Content content, User user, ActionType actionType) {
+    public static UserContentAction create(Content content, Long userId, ActionType actionType) {
         UserContentAction action = new UserContentAction();
         action.content = content;
-        action.user = user;
+        action.userId = userId;
         action.platform = content.getPlatform();
         action.actionType = actionType;
         action.createdAt = LocalDateTime.now();

@@ -5,8 +5,6 @@ import com.kbonote.kbofeedservice.domain.content.entity.ActionType;
 import com.kbonote.kbofeedservice.domain.content.entity.Content;
 import com.kbonote.kbofeedservice.domain.content.entity.UserContentAction;
 import com.kbonote.kbofeedservice.domain.content.repository.UserContentActionRepository;
-import com.kbonote.kbofeedservice.domain.user.entity.User;
-import com.kbonote.kbofeedservice.domain.user.repository.UserRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserContentActionLogServiceImpl implements UserContentActionLogService {
 
     private final UserContentActionRepository userContentActionRepository;
-    private final UserRepository userRepository;
     private final Counter actionLogFailureCounter;
 
     public UserContentActionLogServiceImpl(
             UserContentActionRepository userContentActionRepository,
-            UserRepository userRepository,
             MeterRegistry meterRegistry
     ) {
         this.userContentActionRepository = userContentActionRepository;
-        this.userRepository = userRepository;
         this.actionLogFailureCounter = Counter.builder("user_content_action.log.failure")
                 .description("Number of failures while writing user_content_action logs")
                 .register(meterRegistry);
@@ -38,8 +33,7 @@ public class UserContentActionLogServiceImpl implements UserContentActionLogServ
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void log(Content content, Long userId, ActionType actionType) {
         try {
-            User user = userRepository.getReferenceById(userId);
-            userContentActionRepository.save(UserContentAction.create(content, user, actionType));
+            userContentActionRepository.save(UserContentAction.create(content, userId, actionType));
         } catch (Exception ex) {
             // Action log failure should not break main user flow.
             actionLogFailureCounter.increment();

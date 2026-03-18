@@ -10,8 +10,6 @@ import com.kbonote.kbofeedservice.domain.content.like.exception.ArticleNotFoundE
 import com.kbonote.kbofeedservice.domain.content.like.service.ContentLikeCommandService;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentLikeRepository;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentRepository;
-import com.kbonote.kbofeedservice.domain.user.entity.User;
-import com.kbonote.kbofeedservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,6 @@ public class ContentLikeCommandServiceImpl implements ContentLikeCommandService 
 
     private final ContentRepository contentRepository;
     private final ContentLikeRepository contentLikeRepository;
-    private final UserRepository userRepository;
     private final UserContentActionLogService userContentActionLogService;
 
     @Override
@@ -46,8 +43,7 @@ public class ContentLikeCommandServiceImpl implements ContentLikeCommandService 
     }
 
     private ContentLikeToggleResponse createLike(Content content, Long userId) {
-        User user = userRepository.getReferenceById(userId);
-        contentLikeRepository.save(ContentLike.create(content, user));
+        contentLikeRepository.save(ContentLike.create(content, userId));
         content.increaseLikeCount();
         return new ContentLikeToggleResponse(content.getId(), true, content.getLikeCount());
     }
@@ -68,7 +64,7 @@ public class ContentLikeCommandServiceImpl implements ContentLikeCommandService 
     }
 
     private void validateUser(Long userId) {
-        if (userId == null || !userRepository.existsById(userId)) {
+        if (userId == null) {
             throw new UnauthorizedException("인증이 필요합니다.");
         }
     }

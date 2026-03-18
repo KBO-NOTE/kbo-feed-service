@@ -13,10 +13,9 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
+                cc.id, cc.userId, null, null, cc.comment, cc.createdAt
             )
             from ContentComment cc
-            join cc.user u
             where cc.content.id = :contentId
             order by cc.createdAt desc, cc.id desc
             """)
@@ -24,10 +23,9 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
+                cc.id, cc.userId, null, null, cc.comment, cc.createdAt
             )
             from ContentComment cc
-            join cc.user u
             where cc.content.id = :contentId
               and (
                   cc.createdAt < :cursorCreatedAt
@@ -44,10 +42,9 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
+                cc.id, cc.userId, null, null, cc.comment, cc.createdAt
             )
             from ContentComment cc
-            join cc.user u
             where cc.content.id = :contentId
             order by cc.createdAt asc, cc.id asc
             """)
@@ -55,10 +52,9 @@ public interface ContentCommentRepository extends JpaRepository<ContentComment, 
 
     @Query("""
             select new com.kbonote.kbofeedservice.domain.content.comment.dto.CommentRow(
-                cc.id, u.id, u.nickname, u.profileImageUrl, cc.comment, cc.createdAt
+                cc.id, cc.userId, null, null, cc.comment, cc.createdAt
             )
             from ContentComment cc
-            join cc.user u
             where cc.content.id = :contentId
               and (
                   cc.createdAt > :cursorCreatedAt

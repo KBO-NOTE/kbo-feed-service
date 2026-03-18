@@ -1,6 +1,5 @@
 package com.kbonote.kbofeedservice.domain.content.entity;
 
-import com.kbonote.kbofeedservice.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,9 +28,8 @@ public class ContentComment {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String comment;
@@ -45,10 +43,10 @@ public class ContentComment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public static ContentComment create(Content content, User user, String comment) {
+    public static ContentComment create(Content content, Long userId, String comment) {
         ContentComment contentComment = new ContentComment();
         contentComment.content = content;
-        contentComment.user = user;
+        contentComment.userId = userId;
         contentComment.comment = comment;
         contentComment.status = "ACTIVE";
         contentComment.createdAt = LocalDateTime.now();

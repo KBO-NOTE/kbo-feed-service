@@ -12,8 +12,6 @@ import com.kbonote.kbofeedservice.domain.content.entity.ContentComment;
 import com.kbonote.kbofeedservice.domain.content.like.exception.ArticleNotFoundException;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentCommentRepository;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentRepository;
-import com.kbonote.kbofeedservice.domain.user.entity.User;
-import com.kbonote.kbofeedservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +23,6 @@ public class ContentCommentCommandServiceImpl implements ContentCommentCommandSe
 
     private final ContentRepository contentRepository;
     private final ContentCommentRepository contentCommentRepository;
-    private final UserRepository userRepository;
     private final UserContentActionLogService userContentActionLogService;
 
     @Override
@@ -36,9 +33,8 @@ public class ContentCommentCommandServiceImpl implements ContentCommentCommandSe
 
         Content content = contentRepository.findByIdForUpdate(contentId)
                 .orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
-        User user = userRepository.getReferenceById(userId);
 
-        ContentComment saved = contentCommentRepository.save(ContentComment.create(content, user, normalizedComment));
+        ContentComment saved = contentCommentRepository.save(ContentComment.create(content, userId, normalizedComment));
         content.increaseCommentCount();
         userContentActionLogService.log(content, userId, ActionType.COMMENT);
 
@@ -46,7 +42,7 @@ public class ContentCommentCommandServiceImpl implements ContentCommentCommandSe
     }
 
     private void validateUser(Long userId) {
-        if (userId == null || !userRepository.existsById(userId)) {
+        if (userId == null) {
             throw new UnauthorizedException("로그인이 필요합니다.");
         }
     }

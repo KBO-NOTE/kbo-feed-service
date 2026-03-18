@@ -25,9 +25,11 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
         Object userIdAttr = webRequest.getAttribute(GatewayAuthInterceptor.ATTR_USER_ID, NativeWebRequest.SCOPE_REQUEST);
         Object userRoleAttr = webRequest.getAttribute(GatewayAuthInterceptor.ATTR_USER_ROLE, NativeWebRequest.SCOPE_REQUEST);
 
-        if (!(userIdAttr instanceof Long userId) || !(userRoleAttr instanceof String userRole)) {
+        if (!(userIdAttr instanceof Long userId)) {
             throw new UnauthorizedException("인증이 필요합니다.");
         }
+
+        String userRole = userRoleAttr instanceof String role && !role.isBlank() ? role : "USER";
         return new CurrentUser(userId, userRole);
     }
 }
