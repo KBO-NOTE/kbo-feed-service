@@ -74,8 +74,8 @@ public class SwaggerConfig {
         Parameter parameter = new Parameter()
                 .in("header")
                 .name(HEADER_USER_ROLE)
-                .required(true)
-                .description("Authenticated user role from API Gateway")
+                .required(false)
+                .description("Authenticated user role from API Gateway (optional, defaults to USER)")
                 .schema(new StringSchema().example("USER"));
 
         addParameter(operation, parameter);

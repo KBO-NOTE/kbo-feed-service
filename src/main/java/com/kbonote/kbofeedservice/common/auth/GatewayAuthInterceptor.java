@@ -20,7 +20,7 @@ public class GatewayAuthInterceptor implements HandlerInterceptor {
         String userIdHeader = request.getHeader(HEADER_USER_ID);
         String userRoleHeader = request.getHeader(HEADER_USER_ROLE);
 
-        if (!StringUtils.hasText(userIdHeader) || !StringUtils.hasText(userRoleHeader)) {
+        if (!StringUtils.hasText(userIdHeader)) {
             throw new UnauthorizedException("인증이 필요합니다.");
         }
 
@@ -32,7 +32,7 @@ public class GatewayAuthInterceptor implements HandlerInterceptor {
         }
 
         request.setAttribute(ATTR_USER_ID, userId);
-        request.setAttribute(ATTR_USER_ROLE, userRoleHeader);
+        request.setAttribute(ATTR_USER_ROLE, StringUtils.hasText(userRoleHeader) ? userRoleHeader : "USER");
         return true;
     }
 }

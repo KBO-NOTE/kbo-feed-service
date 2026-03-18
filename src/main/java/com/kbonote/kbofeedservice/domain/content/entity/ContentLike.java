@@ -1,6 +1,5 @@
 package com.kbonote.kbofeedservice.domain.content.entity;
 
-import com.kbonote.kbofeedservice.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,9 +30,8 @@ public class ContentLike {
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -42,10 +40,10 @@ public class ContentLike {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public static ContentLike create(Content content, User user) {
+    public static ContentLike create(Content content, Long userId) {
         ContentLike contentLike = new ContentLike();
         contentLike.content = content;
-        contentLike.user = user;
+        contentLike.userId = userId;
         contentLike.status = ContentLikeStatus.LIKE;
         contentLike.createdAt = LocalDateTime.now();
         return contentLike;

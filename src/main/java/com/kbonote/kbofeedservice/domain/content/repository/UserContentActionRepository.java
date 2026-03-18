@@ -16,7 +16,7 @@ public interface UserContentActionRepository extends JpaRepository<UserContentAc
                 end
             ), 0)
             from UserContentAction uca
-            where uca.user.id = :userId
+            where uca.userId = :userId
             """)
     long calculateEngagementScore(@Param("userId") Long userId);
 }
