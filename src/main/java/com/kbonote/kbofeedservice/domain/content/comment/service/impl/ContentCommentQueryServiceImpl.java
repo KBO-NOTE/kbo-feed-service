@@ -12,7 +12,12 @@ import com.kbonote.kbofeedservice.domain.content.comment.service.CommentCursorCo
 import com.kbonote.kbofeedservice.domain.content.comment.service.ContentCommentQueryService;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentCommentRepository;
 import com.kbonote.kbofeedservice.domain.content.repository.ContentRepository;
+import com.kbonote.kbofeedservice.domain.user.profile.UserProfileClient;
+import com.kbonote.kbofeedservice.domain.user.profile.UserProfileInfo;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,7 @@ public class ContentCommentQueryServiceImpl implements ContentCommentQueryServic
     private final ContentRepository contentRepository;
     private final ContentCommentRepository contentCommentRepository;
     private final CommentCursorCodec commentCursorCodec;
+    private final UserProfileClient userProfileClient;
 
     @Override
     public CommentListResponse getComments(Long contentId, CommentListQuery query) {
@@ -45,6 +51,7 @@ public class ContentCommentQueryServiceImpl implements ContentCommentQueryServic
 
         boolean hasNext = rows.size() > pageSize;
         List<CommentRow> currentPageRows = hasNext ? rows.subList(0, pageSize) : rows;
+        Map<Long, UserProfileInfo> userProfiles = loadUserProfiles(currentPageRows);
 
         String nextCursor = null;
         if (hasNext && !currentPageRows.isEmpty()) {
@@ -56,8 +63,8 @@ public class ContentCommentQueryServiceImpl implements ContentCommentQueryServic
                 .map(row -> new CommentItemResponse(
                         row.id(),
                         row.userId(),
-                        row.nickname(),
-                        row.profileImageUrl(),
+                        getNickName(row, userProfiles),
+                        getProfileImageUrl(row, userProfiles),
                         row.content(),
                         row.createdAt()
                 ))
@@ -100,5 +107,34 @@ public class ContentCommentQueryServiceImpl implements ContentCommentQueryServic
                 cursor.id(),
                 pageable
         );
+    }
+
+    private Map<Long, UserProfileInfo> loadUserProfiles(List<CommentRow> rows) {
+        Set<Long> userIds = rows.stream()
+                .map(CommentRow::userId)
+                .filter(Objects::nonNull)
+                .collect(java.util.stream.Collectors.toSet());
+
+        if (userIds.isEmpty()) {
+            return Map.of();
+        }
+
+        return userProfileClient.getProfiles(userIds);
+    }
+
+    private String getNickName(CommentRow row, Map<Long, UserProfileInfo> userProfiles) {
+        UserProfileInfo userProfileInfo = userProfiles.get(row.userId());
+        if (userProfileInfo == null || userProfileInfo.nickName() == null) {
+            return row.nickname();
+        }
+        return userProfileInfo.nickName();
+    }
+
+    private String getProfileImageUrl(CommentRow row, Map<Long, UserProfileInfo> userProfiles) {
+        UserProfileInfo userProfileInfo = userProfiles.get(row.userId());
+        if (userProfileInfo == null || userProfileInfo.profileImageUrl() == null) {
+            return row.profileImageUrl();
+        }
+        return userProfileInfo.profileImageUrl();
     }
 }
