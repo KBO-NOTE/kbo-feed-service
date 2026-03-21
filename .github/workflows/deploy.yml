@@ -44,21 +44,15 @@ jobs:
           port: 22
           envs: USER_SERVICE_BASE_URL
           script: |
-            LOG_DIR=~/kbo-note/kbo-feed-service/logs
-            DEPLOY_LOG_FILE="$LOG_DIR/deploy.log"
+            DEPLOY_DIR=/home/makersfarm/kbo-note/kbo-feed-service/deploy
+            DEPLOY_LOG_FILE="$DEPLOY_DIR/deploy.log"
 
-            mkdir -p "$LOG_DIR"
-            mkdir -p ~/kbo-note/kbo-feed-service/deploy
-            echo "[$(date +"%Y-%m-%d %H:%M:%S")] [INFO] Deploy script started (sha=${{ github.sha }})" | tee -a "$DEPLOY_LOG_FILE"
+            mkdir -p "$DEPLOY_DIR"
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            echo "[$(date +"%Y-%m-%d %H:%M:%S")] [INFO] Logging in to GHCR" | tee -a "$DEPLOY_LOG_FILE"
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin >> "$DEPLOY_LOG_FILE" 2>&1
-
-            echo "[$(date +"%Y-%m-%d %H:%M:%S")] [INFO] Running deploy.sh with SHA: ${{ github.sha }}" | tee -a "$DEPLOY_LOG_FILE"
-            cd ~/kbo-note/kbo-feed-service/deploy
+            cd "$DEPLOY_DIR"
             export USER_SERVICE_BASE_URL="$USER_SERVICE_BASE_URL"
-            ./deploy.sh ${{ github.sha }} >> "$DEPLOY_LOG_FILE" 2>&1
-            echo "[$(date +"%Y-%m-%d %H:%M:%S")] [INFO] deploy.sh finished successfully" | tee -a "$DEPLOY_LOG_FILE"
-            
-            docker logout ghcr.io >> "$DEPLOY_LOG_FILE" 2>&1
-            echo "[$(date +"%Y-%m-%d %H:%M:%S")] [INFO] Deploy script completed. Log file: $DEPLOY_LOG_FILE" | tee -a "$DEPLOY_LOG_FILE"
+            ./deploy.sh ${{ github.sha }}
+
+            echo "[$(date +"%Y-%m-%d %H:%M:%S")] deployed feed-service sha=${{ github.sha }}" >> "$DEPLOY_LOG_FILE"
+            docker logout ghcr.io

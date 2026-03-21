@@ -1,6 +1,9 @@
 <configuration>
 
-    <property name="LOG_PATH" value="/var/log/kbo-feed-service"/>
+    <springProperty scope="context"
+                    name="LOG_PATH"
+                    source="logging.file.path"
+                    defaultValue="./logs"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/app.log</file>
