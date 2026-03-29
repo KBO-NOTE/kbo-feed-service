@@ -44,13 +44,14 @@ public class FavoriteController {
     }
 
 
-    @Operation(summary = "팔로우 선수 ID 목록 조회", description = "내가 팔로우한 모든 선수의 ID 목록을 반환합니다.")
+    @Operation(summary = "팔로우 선수 ID 목록 조회", description = "내가 팔로우한 모든 선수의 ID 목록을 반환합니다. sort=popular 시 팔로우 수 내림차순 정렬.")
     @GetMapping
     public FavoritePlayersResponse getFavoritePlayerIds(
+            @RequestParam(required = false) String sort,
             @Parameter(hidden = true)
             @CurrentUserParam CurrentUser currentUser
     ) {
-        List<Long> playerIds = favoriteService.getFavoritePlayerIds(currentUser.userId());
+        List<Long> playerIds = favoriteService.getFavoritePlayerIds(currentUser.userId(), sort);
         return new FavoritePlayersResponse(playerIds);
     }
 }

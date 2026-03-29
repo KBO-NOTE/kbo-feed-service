@@ -49,7 +49,10 @@ public class FavoriteService {
         favoriteRepository.deleteById(id);
     }
 
-    public List<Long> getFavoritePlayerIds(Long userId) {
+    public List<Long> getFavoritePlayerIds(Long userId, String sort) {
+        if ("popular".equalsIgnoreCase(sort)) {
+            return favoriteRepository.findPlayerIdsByUserIdOrderByFollowCountDesc(userId);
+        }
         return favoriteRepository.findAllByIdUserId(userId)
                 .stream()
                 .map(favorite -> favorite.getId().getPlayerId())
